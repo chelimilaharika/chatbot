@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Advanced Rule-Based Chatbot</title>
+<style>
+body{
+    font-family: Arial;
+    background:#f2f2f2;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.chat-container{
+    width:380px;
+    height:550px;
+    background:white;
+    border-radius:10px;
+    display:flex;
+    flex-direction:column;
+    box-shadow:0 4px 10px rgba(0,0,0,0.2);
+}
+
+.chat-box{
+    flex:1;
+    padding:10px;
+    overflow-y:auto;
+    display:flex;
+    flex-direction:column;
+}
+
+.message{
+    padding:8px;
+    margin:6px 0;
+    border-radius:8px;
+    max-width:80%;
+    font-size:14px;
+    white-space:pre-line;
+}
+
+.user{
+    background:#d1e7ff;
+    align-self:flex-end;
+}
+
+.bot{
+    background:#e2e2e2;
+    align-self:flex-start;
+}
+
+.input-area{
+    display:flex;
+    border-top:1px solid #ccc;
+}
+
+input{
+    flex:1;
+    padding:10px;
+    border:none;
+    outline:none;
+}
+
+button{
+    padding:10px;
+    border:none;
+    background:#4CAF50;
+    color:white;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#45a049;
+}
+</style>
+</head>
+
+<body>
+
+<div class="chat-container">
+    <div class="chat-box" id="chatBox"></div>
+
+    <div class="input-area">
+        <input type="text" id="userInput" placeholder="Type message...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+</div>
+
+<script>
+
+// Jokes Collection
+const jokes = [
+    "Why don't programmers like nature? Because it has too many bugs! 😂",
+    "Why did the computer go to the doctor? Because it caught a virus! 🦠",
+    "Why was the math book sad? Because it had too many problems! 📘",
+    "Why do Java developers wear glasses? Because they don't C#! 😄",
+    "What do you call fake spaghetti? An impasta! 🍝",
+    "Why was the computer cold? It left its Windows open! 🪟",
+    "Why did the student eat his homework? Because the teacher said it was a piece of cake! 🎂",
+    "Why did the scarecrow win an award? Because he was outstanding in his field! 🌾"
+];
+
+let jokeIndex = 0;
+
+function getNextJoke(){
+    let joke = jokes[jokeIndex];
+    jokeIndex++;
+
+    if(jokeIndex >= jokes.length){
+        jokeIndex = 0;
+    }
+
+    return joke;
+}
+
+function getResponse(message){
+
+    message = message.toLowerCase().trim();
+
+    if(message.includes("hi") || message.includes("hello") || message.includes("hey")){
+        return "Hello! 👋 Type 'help' to see what I can do.";
+    }
+
+    else if(message.includes("help") || message.includes("what can you do")){
+        return "I can respond to:\n• Greetings\n• Time\n• Date\n• Simple Math (e.g., 5 + 3)\n• Tell jokes (type 'joke')\n• Weather\n• My name\n• Thanks\n• Bye";
+    }
+
+    else if(message.includes("your name")){
+        return "I'm your advanced rule-based chatbot 🤖";
+    }
+
+    else if(message.includes("time")){
+        return "Current time: " + new Date().toLocaleTimeString();
+    }
+
+    else if(message.includes("date")){
+        return "Today's date: " + new Date().toLocaleDateString();
+    }
+
+    else if(message.includes("+")){
+        try{
+            return "Answer: " + eval(message);
+        } catch{
+            return "Please enter valid math like 5 + 3";
+        }
+    }
+
+    else if(message.includes("joke")){
+        return getNextJoke();
+    }
+
+    else if(message.includes("weather")){
+        return "I can't check live weather 🌤 but I hope it's a great day!";
+    }
+
+    else if(message.includes("thank")){
+        return "You're welcome! 😊";
+    }
+
+    else if(message.includes("bye")){
+        return "Goodbye! Have a nice day! 👋";
+    }
+
+    else{
+        return "Sorry, I don't understand that. Type 'help' to see options.";
+    }
+}
+
+function sendMessage(){
+
+    let input = document.getElementById("userInput");
+    let chatBox = document.getElementById("chatBox");
+    let message = input.value.trim();
+
+    if(message === "") return;
+
+    let userMsg = document.createElement("div");
+    userMsg.className = "message user";
+    userMsg.textContent = message;
+    chatBox.appendChild(userMsg);
+
+    let botMsg = document.createElement("div");
+    botMsg.className = "message bot";
+    botMsg.textContent = getResponse(message);
+    chatBox.appendChild(botMsg);
+
+    input.value = "";
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+// Enter key support
+document.getElementById("userInput").addEventListener("keydown", function(event){
+    if(event.key === "Enter"){
+        sendMessage();
+    }
+});
+
+// Welcome message
+window.onload = function(){
+    let chatBox = document.getElementById("chatBox");
+    let welcome = document.createElement("div");
+    welcome.className = "message bot";
+    welcome.textContent = "Hello! 👋 I can tell jokes, show time/date, do simple math, and more. Type 'help' to see everything!";
+    chatBox.appendChild(welcome);
+}
+
+</script>
+
+</body>
+</html>
